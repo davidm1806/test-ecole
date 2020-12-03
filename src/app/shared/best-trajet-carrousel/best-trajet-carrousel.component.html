@@ -1,0 +1,41 @@
+<div class="swiper-container" [swiper]="config">
+  <div class="swiper-wrapper h-auto">
+    <div class="swiper-slide bg-maron py-5 lh text-white rounded" *ngFor="let item of expeditionLasts">
+
+      <div  fxLayout="column" fxLayoutAlign="space-around center">
+        <span class="text-uppercase text-center font-2xl">Colis</span>
+        <br/>
+
+        <span class="font-xl"><mat-icon>access_time</mat-icon> Il y'a {{item.duree}}</span>
+        <br/>
+
+        <img src="assets/img/icone/images.png" class="img-fluid rounded-circle" alt="small colis">
+
+        <br/>
+
+        <div class="bg-dark py-4  text-danger rounded w-100">
+          <div fxLayout="column" fxLayoutAlign="space-around center">
+            <span class="text-uppercase font-2xl"><mat-icon class="font-xl">place</mat-icon> {{item.from}}</span>
+            <br/>
+
+            <mat-icon>arrow_downward</mat-icon>
+
+            <br/>
+            <span class="text-uppercase font-2xl"><mat-icon class="font-xl">place</mat-icon>  {{item.till}}</span>
+          </div>
+
+        </div>
+
+        <br/>
+
+
+        <span class="font-2xl"><mat-icon>hourglass_full</mat-icon> {{item.poids}} KG</span>
+
+      </div>
+
+    </div>
+  </div>
+
+  <button mat-mini-fab color="accent" class="swiper-button-prev swipe-arrow bg-muted"><mat-icon>keyboard_arrow_left</mat-icon></button>
+  <button mat-mini-fab color="accent" class="swiper-button-next swipe-arrow bg-muted"><mat-icon>keyboard_arrow_right</mat-icon></button>
+</div>

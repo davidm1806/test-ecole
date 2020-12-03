@@ -1,0 +1,178 @@
+<div mat-dialog-title>
+  <button mat-button (click)="close()" class="float-left"><mat-icon>close</mat-icon>Fermer</button>
+
+  <h4 class="text-center">Détail Colis</h4>
+</div>
+
+<div mat-dialog-content>
+
+  <mat-tab-group>
+
+    <mat-tab label="Colis">
+      <br/>
+
+
+      <div class="row my-2">
+        <div class="col-md-6 col-8">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>recherche dans colis</mat-label>
+            <input matInput (keyup)="applyFilterColis($event)" placeholder="Recherche dans le tableau">
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6 col-4 pr-5">
+          <div fxLayout="row wrap" fxLayoutAlign="end">
+            <button color="primary" mat-raised-button class="ml-2" (click)="colisSave(null)"><mat-icon>add_circle</mat-icon> Ajouter colis</button>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="col-12 overflow-auto mt-4">
+        <table mat-table [dataSource]="dataSourceColis" class="mat-elevation-z8 w-100" matSort>
+          <!-- Position Column -->
+          <ng-container matColumnDef="code">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Code </th>
+            <td mat-cell *matCellDef="let element" class="px-1"> {{element.id}} </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nom </th>
+            <td mat-cell *matCellDef="let element" class="px-1"> {{element.name}} </td>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="poids">
+            <th mat-header-cell *matHeaderCellDef> Poids </th>
+            <td mat-cell *matCellDef="let element" class="px-1"> {{element.poids}} </td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="nature">
+            <th mat-header-cell *matHeaderCellDef> Nature </th>
+            <td mat-cell *matCellDef="let element" class="px-1"> {{element.nature}} </td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="valeur">
+            <th mat-header-cell *matHeaderCellDef> Valeur </th>
+            <td mat-cell *matCellDef="let element" class="px-1"> {{element.valeur}} </td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="propretaire">
+            <th mat-header-cell *matHeaderCellDef> Propriétaire </th>
+            <td mat-cell *matCellDef="let element" class="px-1"> {{element.client?.name + ' '+ element.client?.surname}} </td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="destinataire">
+            <th mat-header-cell *matHeaderCellDef> Destinataire </th>
+            <td mat-cell *matCellDef="let element" class="px-1"> {{element.destinataire?.name + ' '+ element.destinataire?.surname}} </td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="dateLastUpdate">
+            <th mat-header-cell *matHeaderCellDef> Modifié le </th>
+            <td mat-cell *matCellDef="let element" class="px-1"> {{element.dateLastUpdate}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="montant">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> montant </th>
+            <td mat-cell *matCellDef="let element" class="px-1"> {{element.amountExpedition | number: '0.0'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity </th>
+            <td mat-cell *matCellDef="let element" class="px-1"> {{element.quantity | number: '0.0'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="total">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
+            <td mat-cell *matCellDef="let element" class="px-1"> {{element.amountExpedition * element.quantity | number: '0.0'}}XAF </td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef> Action </th>
+            <td mat-cell *matCellDef="let element" class="text-danger px-1">
+              <button mat-icon-button [disabled]="element.archiver" matTooltip="modifier" (click)="colisSave(element)"><mat-icon color="accent">edit</mat-icon></button>
+              <button mat-icon-button matTooltip="Voir les détails" (click)="seeDetailColis(element)"><mat-icon color="primary">remove_red_eye</mat-icon></button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsColis"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsColis;"></tr>
+        </table>
+      </div>
+
+      <mat-paginator #colisPaginator class="my-2" color="primary"
+                     (page)="setPageColis($event)"
+                     [length]="length" showFirstLastButtons
+                     [pageIndex]="pages"
+                     [pageSize]="25"
+                     [pageSizeOptions]="[25,50,200,500]"></mat-paginator>
+    </mat-tab>
+
+
+    <mat-tab label="facturation">
+
+
+
+    </mat-tab>
+
+
+
+    <mat-tab label="Info Client">
+
+      <table class="table table-borderless w-100">
+        <tr class="font-weight-bold text-danger">
+          <th>CODE CLIENT</th>
+          <td COLSPAN="5">{{client.codeClient}}</td>
+        </tr>
+        <tr>
+          <th>NOM</th>
+          <td>{{client.name}}</td>
+          <th>PRENOM</th>
+          <td>{{client.surname}}</td>
+        </tr>
+        <tr>
+          <th>TELEPHONE</th>
+          <td>{{client.telephone}}</td>
+          <th>EMAIL</th>
+          <td>{{client.email}}</td>
+        </tr>
+        <tr>
+          <th>DATE NAISSANCE</th>
+          <td>{{client.dateNaissance}}</td>
+          <th>SEXE</th>
+          <td>{{client.sexe}}</td>
+        </tr>
+        <tr>
+          <th>ENREGISTRE LE</th>
+          <td>{{client.dateCreated}}</td>
+          <th>MODIFIE LE</th>
+          <td colspan="3">{{client.dateLastUpdate}}</td>
+        </tr>
+        <tr>
+          <th>CODE AGENCE</th>
+          <td colspan="4">{{client.agenceEnregistrement?.code}}</td>
+        </tr>
+      </table>
+
+      <div fxLayoutAlign="center" class="mt-2">
+        <button mat-raised-button color="primary" (click)="updateClient()"><mat-icon>edit</mat-icon> modifier</button>
+      </div>
+
+    </mat-tab>
+
+
+
+
+
+
+  </mat-tab-group>
+
+</div>
